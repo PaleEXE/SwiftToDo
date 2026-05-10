@@ -6,7 +6,7 @@ class BaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .backgroundColor
+        view.backgroundColor = .background
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             image: UIImage(systemName: "house"),

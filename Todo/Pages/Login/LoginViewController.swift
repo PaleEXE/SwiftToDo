@@ -1,18 +1,27 @@
 import UIKit
 
 class LoginViewController: UIViewController {
-    let usernameField = UITextField()
-    let passwordField = UITextField()
-    let eyeButton = UIButton(type: .system)
-    let loginButton = UIButton(type: .system)
 
-    let stackView = UIStackView()
+    @IBOutlet weak var usernameField: UITextField!
+    @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var stackView: UIStackView!
+
+    let eyeButton = UIButton(type: .system)
+
+    init() {
+        super.init(nibName: "LoginViewController", bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         title = "Login"
-        view.backgroundColor = .backgroundColor
+        view.backgroundColor = .background
 
         setupUsernameField()
         setupPasswordField()
@@ -21,24 +30,23 @@ class LoginViewController: UIViewController {
     }
 
     func setupUsernameField() {
-        usernameField.placeholder = "Username"
         usernameField.borderStyle = .none
-        usernameField.backgroundColor = .cardColor
+        usernameField.backgroundColor = .card
         usernameField.textColor = .primaryText
-        usernameField.tintColor = .primaryColor
+        usernameField.tintColor = .myPrimary
+
         usernameField.layer.cornerRadius = 12
         usernameField.layer.borderWidth = 1
         usernameField.layer.borderColor = UIColor.secondaryText.cgColor
+
         usernameField.attributedPlaceholder = NSAttributedString(
             string: "Username",
             attributes: [
-                .foregroundColor: UIColor.secondaryText,
+                .foregroundColor: UIColor.secondaryText
             ]
         )
 
         usernameField.setLeftPadding(12)
-
-        usernameField.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         usernameField.addTarget(
             self,
@@ -48,25 +56,24 @@ class LoginViewController: UIViewController {
     }
 
     func setupPasswordField() {
-        passwordField.placeholder = "Password"
         passwordField.borderStyle = .none
         passwordField.isSecureTextEntry = true
-        passwordField.backgroundColor = .cardColor
+        passwordField.backgroundColor = .card
         passwordField.textColor = .primaryText
-        passwordField.tintColor = .primaryColor
+        passwordField.tintColor = .myPrimary
+
         passwordField.layer.cornerRadius = 12
         passwordField.layer.borderWidth = 1
         passwordField.layer.borderColor = UIColor.secondaryText.cgColor
+
         passwordField.attributedPlaceholder = NSAttributedString(
             string: "Password",
             attributes: [
-                .foregroundColor: UIColor.secondaryText,
+                .foregroundColor: UIColor.secondaryText
             ]
         )
 
         passwordField.setLeftPadding(12)
-
-        passwordField.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         passwordField.addTarget(
             self,
@@ -94,7 +101,8 @@ class LoginViewController: UIViewController {
     @objc func togglePassword() {
         passwordField.isSecureTextEntry.toggle()
 
-        let imageName = passwordField.isSecureTextEntry
+        let imageName =
+            passwordField.isSecureTextEntry
             ? "eye.slash"
             : "eye"
 
@@ -107,7 +115,7 @@ class LoginViewController: UIViewController {
     func setupLoginButton() {
         loginButton.configuration = .filled()
 
-        loginButton.configuration?.baseBackgroundColor = .primaryColor
+        loginButton.configuration?.baseBackgroundColor = .myPrimary
         loginButton.configuration?.baseForegroundColor = .primaryText
         loginButton.configuration?.cornerStyle = .large
 
@@ -115,8 +123,6 @@ class LoginViewController: UIViewController {
 
         loginButton.isEnabled = false
         loginButton.alpha = 0.6
-
-        loginButton.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         loginButton.addTarget(
             self,
@@ -126,45 +132,16 @@ class LoginViewController: UIViewController {
     }
 
     func setupStackView() {
-        stackView.axis = .vertical
-        stackView.spacing = 16
-        stackView.backgroundColor = .secondaryColor.withAlphaComponent(0.15)
+        stackView.backgroundColor =
+            .mySecondary.withAlphaComponent(0.15)
 
         stackView.layer.cornerRadius = 20
         stackView.layer.borderWidth = 1
-        stackView.layer.borderColor = UIColor.secondaryText.withAlphaComponent(0.2).cgColor
 
-        stackView.translatesAutoresizingMaskIntoConstraints = false
-
-        stackView.addArrangedSubview(usernameField)
-        stackView.addArrangedSubview(passwordField)
-        stackView.addArrangedSubview(loginButton)
-
-        stackView.isLayoutMarginsRelativeArrangement = true
-
-        stackView.layoutMargins = UIEdgeInsets(
-            top: 24,
-            left: 24,
-            bottom: 24,
-            right: 24
-        )
-
-        view.addSubview(stackView)
-
-        NSLayoutConstraint.activate([
-            stackView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            stackView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-
-            stackView.leadingAnchor.constraint(
-                equalTo: view.leadingAnchor,
-                constant: 24
-            ),
-
-            stackView.trailingAnchor.constraint(
-                equalTo: view.trailingAnchor,
-                constant: -24
-            ),
-        ])
+        stackView.layer.borderColor =
+            UIColor.secondaryText
+            .withAlphaComponent(0.2)
+            .cgColor
     }
 
     @objc func onChangeText() {
@@ -175,27 +152,31 @@ class LoginViewController: UIViewController {
             !username.isEmpty &&
             !password.isEmpty
 
-        loginButton.alpha = loginButton.isEnabled ? 1.0 : 0.6
+        loginButton.alpha =
+            loginButton.isEnabled ? 1.0 : 0.6
     }
 
     @objc func handleLogin() {
         let username = usernameField.text ?? ""
         let password = passwordField.text ?? ""
 
-        if username == "Jaradat", password == "AwsAws" {
+        if username == "Jaradat",
+           password == "AwsAws" {
+
             navigationController?.setViewControllers(
                 [HomeViewController()],
                 animated: true
             )
 
         } else {
+
             let alert = UIAlertController(
                 title: "Login Failed",
                 message: "Invalid username or password",
                 preferredStyle: .alert
             )
 
-            alert.view.tintColor = .primaryColor
+            alert.view.tintColor = .myPrimary
 
             alert.addAction(
                 UIAlertAction(
@@ -210,7 +191,9 @@ class LoginViewController: UIViewController {
 }
 
 extension UITextField {
+
     func setLeftPadding(_ amount: CGFloat) {
+
         let paddingView = UIView(
             frame: CGRect(
                 x: 0,

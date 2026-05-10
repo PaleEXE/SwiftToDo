@@ -1,25 +1,23 @@
 import UIKit
 
 class PostsViewController: BaseViewController {
-    var userId: Int?
-    let tableView = UITableView()
+    @IBOutlet weak var tableView: UITableView!
     
+    var userId: Int?
     let vm = PostsViewModel()
     
     init(userId: Int? = nil) {
         self.userId = userId
-        super.init(nibName: nil, bundle: nil)
+        super.init(nibName: "PostsViewController", bundle: nil)
     }
 
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: coder)
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         title = "Posts"
-
         setupTableView()
         
         if let userId {
@@ -27,18 +25,12 @@ class PostsViewController: BaseViewController {
         } else {
             vm.fetchPosts()
         }
-        
     }
 
     func setupTableView() {
-        tableView.frame = view.bounds
-        tableView.backgroundColor = .backgroundColor
         tableView.dataSource = self
         tableView.delegate = self
-        
         bindViewModel()
-        
-        view.addSubview(tableView)
     }
     
     func bindViewModel() {
@@ -49,21 +41,15 @@ class PostsViewController: BaseViewController {
 }
 
 extension PostsViewController: UITableViewDataSource {
-    func tableView(
-        _: UITableView,
-        numberOfRowsInSection _: Int
-    ) -> Int {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
         vm.posts.count
     }
 
-    func tableView(
-        _: UITableView,
-        cellForRowAt indexPath: IndexPath
-    ) -> UITableViewCell {
+    func tableView(_: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
         let post = vm.posts[indexPath.row]
 
-        cell.backgroundColor = .backgroundColor
+        cell.backgroundColor = .background
         cell.textLabel?.textColor = .primaryText
         cell.textLabel?.text = post.title
         cell.detailTextLabel?.text = post.body
@@ -73,15 +59,10 @@ extension PostsViewController: UITableViewDataSource {
 }
 
 extension PostsViewController: UITableViewDelegate {
-    func tableView(
-        _: UITableView,
-        didSelectRowAt indexPath: IndexPath
-    ) {
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPost = vm.posts[indexPath.row]
-
         let vc = PostDetailsViewController()
         vc.post = selectedPost
-
         navigationController?.pushViewController(vc, animated: true)
     }
 }

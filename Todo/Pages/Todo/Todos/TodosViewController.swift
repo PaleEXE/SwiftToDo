@@ -1,28 +1,32 @@
 import UIKit
 
 class TodosViewController: BaseViewController {
-    let tableView = UITableView()
+    @IBOutlet weak var tableView: UITableView!
 
     let vm = TodosViewModel()
-
+    
+    init() {
+        super.init(nibName: "TodosViewController", bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         title = "Todos"
 
         setupTableView()
-        bindViewModel()
 
         vm.fetchTodos()
     }
 
     func setupTableView() {
-        tableView.frame = view.bounds
-        tableView.backgroundColor = .backgroundColor
         tableView.dataSource = self
         tableView.delegate = self
-
-        view.addSubview(tableView)
+        bindViewModel()
     }
 
     func bindViewModel() {

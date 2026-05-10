@@ -16,13 +16,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let nav = UINavigationController(rootViewController: splashVC)
 
         let appearance = UINavigationBarAppearance()
-        appearance.titleTextAttributes = [.foregroundColor: UIColor.secondaryColor]
-        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.secondaryColor]
+        appearance.titleTextAttributes = [.foregroundColor: UIColor.mySecondary]
+        appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.mySecondary]
 
         nav.navigationBar.standardAppearance = appearance
         nav.navigationBar.scrollEdgeAppearance = appearance
         nav.navigationBar.compactAppearance = appearance
-        nav.navigationBar.tintColor = .secondaryColor
+        nav.navigationBar.tintColor = .mySecondary
 
         window.rootViewController = nav
         window.makeKeyAndVisible()

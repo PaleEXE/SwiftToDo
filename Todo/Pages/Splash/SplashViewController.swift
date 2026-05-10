@@ -1,36 +1,27 @@
 import UIKit
 
 class SplashViewController: UIViewController {
+
     private let vm = SplashViewModel()
 
-    private let logoImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(named: "Icon")
-        imageView.contentMode = .scaleAspectFit
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
+    @IBOutlet weak var logoImageView: UIImageView!
+
+    init() {
+        super.init(nibName: "SplashViewController", bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        setupUI()
+        view.backgroundColor = .background
+
         bindViewModel()
 
         vm.start()
-    }
-
-    private func setupUI() {
-        view.backgroundColor = .backgroundColor
-
-        view.addSubview(logoImageView)
-
-        NSLayoutConstraint.activate([
-            logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor),
-            logoImageView.widthAnchor.constraint(equalToConstant: 180),
-            logoImageView.heightAnchor.constraint(equalToConstant: 180),
-        ])
     }
 
     private func bindViewModel() {
