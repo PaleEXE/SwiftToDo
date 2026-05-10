@@ -30,7 +30,7 @@ class CommentsViewController: BaseViewController {
 
     func setupTableView() {
         tableView.frame = view.bounds
-        tableView.backgroundColor = .backgroundColor
+        tableView.backgroundColor = .background
         tableView.dataSource = self
         tableView.delegate = self
 
@@ -64,7 +64,7 @@ extension CommentsViewController: UITableViewDataSource {
 
         let comment = vm.comments[indexPath.row]
 
-        cell.backgroundColor = .backgroundColor
+        cell.backgroundColor = .background
         cell.textLabel?.textColor = .primaryText
 
         cell.textLabel?.text = comment.name

@@ -1,10 +1,18 @@
 import UIKit
 
 class UsersViewController: BaseViewController {
-    let tableView = UITableView()
+    @IBOutlet weak var tableView: UITableView!
 
     let vm = UsersViewModel()
 
+    init() {
+        super.init(nibName: "UsersViewController", bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -15,15 +23,10 @@ class UsersViewController: BaseViewController {
     }
 
     func setupTableView() {
-        tableView.frame = view.bounds
         tableView.dataSource = self
         tableView.delegate = self
 
-        tableView.backgroundColor = .backgroundColor
-
         bindViewModel()
-        
-        view.addSubview(tableView)
     }
     
     func bindViewModel() {
@@ -49,7 +52,7 @@ extension UsersViewController: UITableViewDataSource {
 
         let user = vm.users[indexPath.row]
 
-        cell.backgroundColor = .backgroundColor
+        cell.backgroundColor = .background
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
 
