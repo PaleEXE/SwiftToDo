@@ -3,7 +3,7 @@ import UIKit
 extension UIColor {
     static let primaryColor = UIColor { trait in
         trait.userInterfaceStyle == .dark
-            ? UIColor(red: 0.98, green: 0.29, blue: 0.20, alpha: 1.0)
+            ? UIColor(red: 0.20, green: 0.29, blue: 0.98, alpha: 1.0)
             : UIColor(red: 0.80, green: 0.14, blue: 0.11, alpha: 1.0)
     }
 

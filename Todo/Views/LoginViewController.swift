@@ -182,7 +182,7 @@ class LoginViewController: UIViewController {
         let username = usernameField.text ?? ""
         let password = passwordField.text ?? ""
 
-        if username == "Jaradat", password == "1234" {
+        if username == "Jaradat", password == "AwsAws" {
             navigationController?.setViewControllers(
                 [HomeViewController()],
                 animated: true

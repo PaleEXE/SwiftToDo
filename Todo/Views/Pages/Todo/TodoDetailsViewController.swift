@@ -9,7 +9,6 @@ class TodoDetailsViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .backgroundColor
         title = "Todo Details"
 
         setupUI()
