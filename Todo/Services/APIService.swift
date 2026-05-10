@@ -1,4 +1,4 @@
-@preconcurrency import Alamofire
+import Alamofire
 import Foundation
 
 class APIService {
@@ -11,7 +11,7 @@ class APIService {
     func fetchTodos(
         completion: @escaping ([Todo]) -> Void
     ) {
-        AF.request("https://jsonplaceholder.typicode.com/todos")
+        AF.request("\(baseURL)/todos")
             .validate()
             .response { response in
                 guard let data = response.data else {
@@ -33,7 +33,7 @@ class APIService {
     func fetchUsers(
         completion: @escaping ([User]) -> Void
     ) {
-        AF.request("https://jsonplaceholder.typicode.com/users")
+        AF.request("\(baseURL)/users")
             .validate()
             .response { response in
                 guard let data = response.data else {
@@ -55,17 +55,39 @@ class APIService {
     func fetchPosts(
         completion: @escaping ([Post]) -> Void
     ) {
-        AF.request("https://jsonplaceholder.typicode.com/posts")
+        AF.request("\(baseURL)/posts")
             .validate()
             .response { response in
                 guard let data = response.data else {
                     completion([])
                     return
                 }
-
+                
                 do {
                     let posts = try JSONDecoder().decode([Post].self, from: data)
                     completion(posts)
+
+                } catch {
+                    print(error)
+                    completion([])
+                }
+            }
+    }
+    
+    func fetchPostComments (
+        postId: Int, completion: @escaping ([Comment]) -> Void
+    ) {
+        AF.request("\(baseURL)/comments?postId=\(postId)")
+            .validate()
+            .response { response in
+                guard let data = response.data else {
+                    completion([])
+                    return
+                }
+                
+                do {
+                    let comments = try JSONDecoder().decode([Comment].self, from: data)
+                    completion(comments)
 
                 } catch {
                     print(error)

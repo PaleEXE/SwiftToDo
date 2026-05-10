@@ -3,7 +3,7 @@ import UIKit
 class UsersViewController: BaseViewController {
     let tableView = UITableView()
 
-    var users: [User] = []
+    let vm = UsersViewModel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -11,23 +11,24 @@ class UsersViewController: BaseViewController {
         title = "Users"
 
         setupTableView()
-        fetchUsers()
+        vm.fetchUsers()
     }
 
     func setupTableView() {
         tableView.frame = view.bounds
         tableView.dataSource = self
+        tableView.delegate = self
+
         tableView.backgroundColor = .backgroundColor
 
+        bindViewModel()
+        
         view.addSubview(tableView)
     }
-
-    func fetchUsers() {
-        APIService.shared.fetchUsers { [weak self] users in
-            DispatchQueue.main.async {
-                self?.users = users
-                self?.tableView.reloadData()
-            }
+    
+    func bindViewModel() {
+        vm.onUsersUpdated = { [weak self] in
+            self?.tableView.reloadData()
         }
     }
 }
@@ -37,7 +38,7 @@ extension UsersViewController: UITableViewDataSource {
         _: UITableView,
         numberOfRowsInSection _: Int
     ) -> Int {
-        users.count
+        vm.users.count
     }
 
     func tableView(
@@ -46,12 +47,26 @@ extension UsersViewController: UITableViewDataSource {
     ) -> UITableViewCell {
         let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
 
-        let user = users[indexPath.row]
+        let user = vm.users[indexPath.row]
 
         cell.backgroundColor = .backgroundColor
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
 
         return cell
+    }
+}
+
+extension UsersViewController: UITableViewDelegate {
+    func tableView(
+        _: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
+        let selectedUser = vm.users[indexPath.row]
+
+        let vc = UserDetailsViewController()
+        vc.user = selectedUser
+
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

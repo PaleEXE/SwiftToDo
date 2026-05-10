@@ -1,7 +1,7 @@
 import UIKit
 
 class SplashViewController: UIViewController {
-    private let viewModel = SplashViewModel()
+    private let vm = SplashViewModel()
 
     private let logoImageView: UIImageView = {
         let imageView = UIImageView()
@@ -17,7 +17,7 @@ class SplashViewController: UIViewController {
         setupUI()
         bindViewModel()
 
-        viewModel.start()
+        vm.start()
     }
 
     private func setupUI() {
@@ -34,7 +34,7 @@ class SplashViewController: UIViewController {
     }
 
     private func bindViewModel() {
-        viewModel.onFinished = { [weak self] in
+        vm.onFinished = { [weak self] in
             self?.goToLogin()
         }
     }
