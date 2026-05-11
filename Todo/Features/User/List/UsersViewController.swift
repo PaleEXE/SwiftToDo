@@ -53,6 +53,7 @@ extension UsersViewController: UITableViewDataSource {
         let user = vm.users[indexPath.row]
 
         cell.backgroundColor = .background
+        cell.textLabel?.textColor = .primaryText
         cell.textLabel?.text = user.name
         cell.detailTextLabel?.text = user.email
 
