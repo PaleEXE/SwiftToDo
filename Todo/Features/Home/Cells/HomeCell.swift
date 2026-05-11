@@ -9,16 +9,27 @@ class HomeCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         setupStyles()
+        registerForThemeChanges()
     }
 
     private func setupStyles() {
         contentView.backgroundColor = UIColor(named: "card")
         contentView.layer.cornerRadius = 20
         contentView.layer.borderWidth = 1
-        contentView.layer.borderColor = UIColor.secondaryLabel.withAlphaComponent(0.2).cgColor
+        updateBorderColor()
         
-        iconImageView.tintColor = .label
-        titleLabel.textColor = .label
+        iconImageView.tintColor = .primaryText
+        titleLabel.textColor = .primaryText
+    }
+
+    private func registerForThemeChanges() {
+        registerForTraitChanges([UITraitUserInterfaceStyle.self]) { (self: Self, previousTraitCollection) in
+            self.updateBorderColor()
+        }
+    }
+
+    private func updateBorderColor() {
+        contentView.layer.borderColor = UIColor.primaryText.withAlphaComponent(0.2).cgColor
     }
 
     func configure(title: String, imageName: String) {
