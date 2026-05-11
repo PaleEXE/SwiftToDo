@@ -23,10 +23,17 @@ class LoginViewController: UIViewController {
         title = "Login"
         view.backgroundColor = .background
 
-        setupUsernameField()
-        setupPasswordField()
+        setUpFields()
         setupLoginButton()
         setupStackView()
+    }
+    
+    func setUpFields() {
+        setupUsernameField()
+        setupPasswordField()
+        
+        usernameField.text = UserDefaults.standard.value(forKey: "username") as? String
+        passwordField.text = UserDefaults.standard.value(forKey: "password") as? String
     }
 
     func setupUsernameField() {
@@ -50,7 +57,7 @@ class LoginViewController: UIViewController {
 
         usernameField.addTarget(
             self,
-            action: #selector(onChangeText),
+            action: #selector(checkLoginButtonActivation),
             for: .editingChanged
         )
     }
@@ -77,7 +84,7 @@ class LoginViewController: UIViewController {
 
         passwordField.addTarget(
             self,
-            action: #selector(onChangeText),
+            action: #selector(checkLoginButtonActivation),
             for: .editingChanged
         )
 
@@ -129,6 +136,7 @@ class LoginViewController: UIViewController {
             action: #selector(handleLogin),
             for: .touchUpInside
         )
+        checkLoginButtonActivation()
     }
 
     func setupStackView() {
@@ -144,7 +152,7 @@ class LoginViewController: UIViewController {
             .cgColor
     }
 
-    @objc func onChangeText() {
+    @objc func checkLoginButtonActivation() {
         let username = usernameField.text ?? ""
         let password = passwordField.text ?? ""
 
@@ -162,7 +170,9 @@ class LoginViewController: UIViewController {
 
         if username == "Jaradat",
            password == "AwsAws" {
-
+            
+            UserDefaults.standard.set(usernameField.text, forKey: "username")
+            UserDefaults.standard.set(passwordField.text, forKey: "password")
             navigationController?.setViewControllers(
                 [HomeViewController()],
                 animated: true
