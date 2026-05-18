@@ -3,15 +3,15 @@ import UIKit
 class PostsViewController: BaseViewController {
     @IBOutlet weak var tableView: UITableView!
     
-    var userId: Int?
-    let vm = PostsViewModel()
+    let vm: PostsViewModel
     
     init(userId: Int? = nil) {
-        self.userId = userId
+        vm = PostsViewModel(userId: userId)
         super.init(nibName: "PostsViewController", bundle: nil)
     }
 
     required init?(coder: NSCoder) {
+        vm = PostsViewModel()
         super.init(coder: coder)
     }
     
@@ -20,11 +20,8 @@ class PostsViewController: BaseViewController {
         title = "Posts"
         setupTableView()
         
-        if let userId {
-            vm.fetchPosts(userId: userId)
-        } else {
-            vm.fetchPosts()
-        }
+        vm.fetchPosts()
+        
     }
 
     func setupTableView() {
@@ -61,8 +58,7 @@ extension PostsViewController: UITableViewDataSource {
 extension PostsViewController: UITableViewDelegate {
     func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedPost = vm.posts[indexPath.row]
-        let vc = PostDetailsViewController()
-        vc.post = selectedPost
+        let vc = PostDetailsViewController(post: selectedPost)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

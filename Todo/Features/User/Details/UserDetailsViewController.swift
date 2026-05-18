@@ -6,15 +6,15 @@ class UserDetailsViewController: BaseViewController {
     @IBOutlet weak var emailLabel: UILabel!
     @IBOutlet weak var postsContainerView: UIView!
     
-    var user: User?
-    var postsVC: PostsViewController?
+    let vm: UserDetailsViewModel
     
-    init() {
+    init(user: User) {
+        vm = UserDetailsViewModel(user: user)
         super.init(nibName: "UserDetailsViewController", bundle: nil)
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
     
     override func viewDidLoad() {
@@ -26,22 +26,19 @@ class UserDetailsViewController: BaseViewController {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        postsVC?.view.frame = postsContainerView.bounds
+        vm.postsVC.view.frame = postsContainerView.bounds
     }
     
     func setUpData() {
-        nameLabel.text = user?.name
-        emailLabel.text = user?.email
+        nameLabel.text = vm.user.name
+        emailLabel.text = vm.user.email
     }
     
     func setUpPosts() {
-        let controller = PostsViewController(userId: user?.id)
-        self.postsVC = controller
-        
-        addChild(controller)
-        controller.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        controller.view.frame = postsContainerView.bounds
-        postsContainerView.addSubview(controller.view)
-        controller.didMove(toParent: self)
+        addChild(vm.postsVC)
+        vm.postsVC.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        vm.postsVC.view.frame = postsContainerView.bounds
+        postsContainerView.addSubview(vm.postsVC.view)
+        vm.postsVC.didMove(toParent: self)
     }
 }

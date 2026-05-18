@@ -1,14 +1,11 @@
 import UIKit
 
 class CommentsViewController: BaseViewController {
-
-    var postId: Int?
-
     let tableView = UITableView()
-    let vm = PostCommentsViewModel()
+    let vm: CommentsViewModel
 
-    init(postId: Int? = nil) {
-        self.postId = postId
+    init(postId: Int) {
+        self.vm = CommentsViewModel(postId: postId)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -22,10 +19,7 @@ class CommentsViewController: BaseViewController {
         title = "Comments"
 
         setupTableView()
-
-        postId != nil
-            ? vm.fetchPostComments(postId: postId!)
-            : nil
+        vm.fetchPostComments()
     }
 
     func setupTableView() {

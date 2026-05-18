@@ -170,33 +170,32 @@ class LoginViewController: UIViewController {
 
         if username == "Jaradat",
            password == "AwsAws" {
-            
-            UserDefaults.standard.set(usernameField.text, forKey: "username")
-            UserDefaults.standard.set(passwordField.text, forKey: "password")
+            UserDefaults.standard.set(username, forKey: "username")
+            UserDefaults.standard.set(password, forKey: "password")
             navigationController?.setViewControllers(
                 [HomeViewController()],
                 animated: true
             )
-
-        } else {
-
-            let alert = UIAlertController(
-                title: "Login Failed",
-                message: "Invalid username or password",
-                preferredStyle: .alert
-            )
-
-            alert.view.tintColor = .myPrimary
-
-            alert.addAction(
-                UIAlertAction(
-                    title: "OK",
-                    style: .destructive
-                )
-            )
-
-            present(alert, animated: true)
+            return
         }
+        
+        let alert = UIAlertController(
+            title: "Login Failed",
+            message: "Invalid username or password",
+            preferredStyle: .alert
+        )
+
+        alert.view.tintColor = .myPrimary
+
+        alert.addAction(
+            UIAlertAction(
+                title: "OK",
+                style: .destructive
+            )
+        )
+
+        present(alert, animated: true)
+    
     }
 }
 

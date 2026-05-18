@@ -76,10 +76,7 @@ extension TodosViewController: UITableViewDelegate {
         didSelectRowAt indexPath: IndexPath
     ) {
         let selectedTodo = vm.todos[indexPath.row]
-
-        let vc = TodoDetailsViewController()
-        vc.todo = selectedTodo
-
+        let vc = TodoDetailsViewController(todo: selectedTodo)
         navigationController?.pushViewController(vc, animated: true)
     }
 }

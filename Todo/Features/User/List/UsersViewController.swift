@@ -67,10 +67,7 @@ extension UsersViewController: UITableViewDelegate {
         didSelectRowAt indexPath: IndexPath
     ) {
         let selectedUser = vm.users[indexPath.row]
-
-        let vc = UserDetailsViewController()
-        vc.user = selectedUser
-
+        let vc = UserDetailsViewController(user: selectedUser)
         navigationController?.pushViewController(vc, animated: true)
     }
 }
