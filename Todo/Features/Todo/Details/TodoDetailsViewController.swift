@@ -5,14 +5,15 @@ class TodoDetailsViewController: BaseViewController {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var statusLabel: UILabel!
     
-    var todo: Todo?
+    let vm: TodoDetailsViewModel
 
-    init() {
+    init(todo: Todo) {
+        vm = TodoDetailsViewModel(todo: todo)
         super.init(nibName: "TodoDetailsViewController", bundle: nil)
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
@@ -22,7 +23,7 @@ class TodoDetailsViewController: BaseViewController {
     }
 
     private func displayTodoData() {
-        titleLabel.text = todo?.title
-        statusLabel.text = todo?.completed == true ? "Completed" : "Not Completed"
+        titleLabel.text = vm.todo.title
+        statusLabel.text = vm.todo.completed == true ? "Completed" : "Not Completed"
     }
 }

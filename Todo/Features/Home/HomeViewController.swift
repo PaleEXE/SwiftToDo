@@ -1,21 +1,11 @@
 import UIKit
 
-struct HomeOption {
-    let title: String
-    let image: String
-    let destination: UIViewController
-}
-
 class HomeViewController: UIViewController {
     
     @IBOutlet private weak var collectionView: UICollectionView!
     
-    private let options: [HomeOption] = [
-        HomeOption(title: "Todos", image: "checklist", destination: TodosViewController()),
-        HomeOption(title: "Users", image: "person.2.fill", destination: UsersViewController()),
-        HomeOption(title: "Posts", image: "doc.text.fill", destination: PostsViewController())
-    ]
-
+    let vm = HomeViewModel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Home"
@@ -48,18 +38,18 @@ class HomeViewController: UIViewController {
 
 extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return options.count
+        return vm.options.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomeCell", for: indexPath) as! HomeCell
-        let option = options[indexPath.item]
+        let option = vm.options[indexPath.item]
         cell.configure(title: option.title, imageName: option.image)
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let destination = options[indexPath.item].destination
+        let destination = vm.options[indexPath.item].destination
         navigationController?.pushViewController(destination, animated: true)
     }
 }

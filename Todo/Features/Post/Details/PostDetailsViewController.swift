@@ -1,42 +1,42 @@
 import UIKit
 
 class PostDetailsViewController: BaseViewController {
-    
+
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var bodyLabel: UILabel!
     @IBOutlet weak var commentsContainerView: UIView!
-    
-    var post: Post?
-    var commentsVC: CommentsViewController?
-    
-    init() {
+
+    let vm: PostDetailsViewModel
+
+    init(post: Post) {
+        self.vm = PostDetailsViewModel(post: post)
         super.init(nibName: "PostDetailsViewController", bundle: nil)
     }
 
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
+        fatalError("init(coder:) has not been implemented")
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Post Details"
-        displayPostData()
-        setUpComments()
+        bindViewModel()
+        setupComments()
     }
 
-    private func displayPostData() {
-        titleLabel.text = post?.title
-        bodyLabel.text = post?.body
+    private func bindViewModel() {
+        titleLabel.text = vm.post.title
+        bodyLabel.text = vm.post.body
     }
-    
-    func setUpComments() {
-        let controller = CommentsViewController(postId: post?.id)
-        self.commentsVC = controller
-        
-        addChild(controller)
-        controller.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        controller.view.frame = commentsContainerView.bounds
-        commentsContainerView.addSubview(controller.view)
-        controller.didMove(toParent: self)
+
+    private func setupComments() {
+        addChild(vm.commentsVC)
+        vm.commentsVC.view.frame = commentsContainerView.bounds
+        vm.commentsVC.view.autoresizingMask = [
+            .flexibleWidth,
+            .flexibleHeight
+        ]
+        commentsContainerView.addSubview(vm.commentsVC.view)
+        vm.commentsVC.didMove(toParent: self)
     }
 }
