@@ -1,15 +1,15 @@
 import Foundation
+import RxSwift
+import RxCocoa
 
 class UsersViewModel {
-    var users: [User] = []
-    var onUsersUpdated: (() -> Void)?
-    
+    let users = BehaviorRelay<[User]>(value: [])
+    private let disposeBag = DisposeBag()
     func fetchUsers() {
-        APIService.shared.fetchUsers { [weak self] users in
-            DispatchQueue.main.async {
-                self?.users = users
-                self?.onUsersUpdated?()
-            }
-        }
+        APIService.shared.fetchUsers()
+            .subscribe(onNext: { [weak self] ferchedUsers in
+                self?.users.accept(ferchedUsers)
+            })
+            .disposed(by: disposeBag)
     }
 }
