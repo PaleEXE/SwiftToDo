@@ -1,9 +1,12 @@
 import UIKit
+import RxSwift
+import RxCocoa
 
 class UsersViewController: BaseViewController {
     @IBOutlet weak var tableView: UITableView!
 
     let vm = UsersViewModel()
+    private let disposeBag = DisposeBag()
 
     init() {
         super.init(nibName: "UsersViewController", bundle: nil)
@@ -23,51 +26,24 @@ class UsersViewController: BaseViewController {
     }
 
     func setupTableView() {
-        tableView.dataSource = self
-        tableView.delegate = self
-
         bindViewModel()
+        vm.fetchUsers()
     }
     
     func bindViewModel() {
-        vm.onUsersUpdated = { [weak self] in
-            self?.tableView.reloadData()
-        }
-    }
-}
-
-extension UsersViewController: UITableViewDataSource {
-    func tableView(
-        _: UITableView,
-        numberOfRowsInSection _: Int
-    ) -> Int {
-        vm.users.count
-    }
-
-    func tableView(
-        _: UITableView,
-        cellForRowAt indexPath: IndexPath
-    ) -> UITableViewCell {
-        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: nil)
-
-        let user = vm.users[indexPath.row]
-
-        cell.backgroundColor = .background
-        cell.textLabel?.textColor = .primaryText
-        cell.textLabel?.text = user.name
-        cell.detailTextLabel?.text = user.email
-
-        return cell
-    }
-}
-
-extension UsersViewController: UITableViewDelegate {
-    func tableView(
-        _: UITableView,
-        didSelectRowAt indexPath: IndexPath
-    ) {
-        let selectedUser = vm.users[indexPath.row]
-        let vc = UserDetailsViewController(user: selectedUser)
-        navigationController?.pushViewController(vc, animated: true)
+        vm.users.observe(on: MainScheduler.instance)
+            .bind(to: tableView.rx.items)  { tableView, row, user in
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+                ?? UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
+                var content = cell.defaultContentConfiguration()
+                content.text = user.name
+                content.secondaryText = user.email
+                content.textProperties.color = .primaryText
+                content.secondaryTextProperties.color = .secondaryText
+                cell.contentConfiguration = content
+                cell.backgroundColor = .background
+                return cell
+            }
+            .disposed(by: disposeBag)
     }
 }
