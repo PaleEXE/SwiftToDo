@@ -45,5 +45,12 @@ class UsersViewController: BaseViewController {
                 return cell
             }
             .disposed(by: disposeBag)
+        
+        tableView.rx.modelSelected(User.self)
+            .subscribe(onNext: { [weak self] selectedUser in
+                let vc = UserDetailsViewController(user: selectedUser)
+                self?.navigationController?.pushViewController(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 }
