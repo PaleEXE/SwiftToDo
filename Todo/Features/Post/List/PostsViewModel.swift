@@ -1,8 +1,10 @@
 import Foundation
+import RxSwift
+import RxCocoa
 
 class PostsViewModel {
-    var posts: [Post] = []
-    var onPostsUpdated: (() -> Void)?
+    let posts = BehaviorRelay<[Post]>(value: [])
+    private let disposeBag = DisposeBag()
     var userId: Int?
     
     init(userId: Int? = nil) {
@@ -17,22 +19,20 @@ class PostsViewModel {
     }
     
     func fetchAllPosts() {
-        APIService.shared.fetchPosts { [weak self] posts in
-            DispatchQueue.main.async {
-                self?.posts = posts
-                self?.onPostsUpdated?()
-            }
-        }
+        APIService.shared.fetchPosts()
+            .subscribe(onNext: { [weak self] fetchedPosts in
+                self?.posts.accept(fetchedPosts)
+            })
+            .disposed(by: disposeBag)
     }
     
     func fetchUserPosts() {
         guard let userId = self.userId else { return }
         
-        APIService.shared.fetchPosts { [weak self] posts in
-            DispatchQueue.main.async {
-                self?.posts = posts.filter { $0.userId == userId }
-                self?.onPostsUpdated?()
-            }
-        }
+        APIService.shared.fetchPosts()
+            .subscribe(onNext: { [weak self] fetchedPosts in
+                self?.posts.accept(fetchedPosts.filter{ $0.userId == userId })
+            })
+            .disposed(by: disposeBag)
     }
 }

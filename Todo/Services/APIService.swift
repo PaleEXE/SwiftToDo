@@ -63,26 +63,29 @@ class APIService {
         })
     }
 
-    func fetchPosts(
-        completion: @escaping ([Post]) -> Void
-    ) {
-        AF.request("\(baseURL)/posts")
-            .validate()
-            .response { response in
-                guard let data = response.data else {
-                    completion([])
-                    return
+    func fetchPosts() -> Observable<[Post]> {
+        return Observable.create({ observer in
+            let request = AF.request("\(self.baseURL)/posts")
+                .validate()
+                .response { resonse in
+                    guard let data = resonse.data else {
+                        observer.onNext([])
+                        observer.onCompleted()
+                        return
+                    }
+                    do {
+                        let posts = try JSONDecoder().decode([Post].self, from: data)
+                        observer.onNext(posts)
+                    } catch {
+                        print(error)
+                        observer.onNext([])
+                    }
+                    observer.onCompleted()
                 }
-                
-                do {
-                    let posts = try JSONDecoder().decode([Post].self, from: data)
-                    completion(posts)
-
-                } catch {
-                    print(error)
-                    completion([])
-                }
+            return Disposables.create {
+                request.cancel()
             }
+        })
     }
     
     func fetchPostComments (
