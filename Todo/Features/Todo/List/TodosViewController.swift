@@ -1,9 +1,12 @@
 import UIKit
+import RxSwift
+import RxCocoa
 
 class TodosViewController: BaseViewController {
     @IBOutlet weak var tableView: UITableView!
 
     let vm = TodosViewModel()
+    private let disposeBag = DisposeBag()
     
     init() {
         super.init(nibName: "TodosViewController", bundle: nil)
@@ -15,68 +18,32 @@ class TodosViewController: BaseViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
         title = "Todos"
-
-        setupTableView()
-
+        bindViewModel()
         vm.fetchTodos()
     }
 
-    func setupTableView() {
-        tableView.dataSource = self
-        tableView.delegate = self
-        bindViewModel()
-    }
-
     func bindViewModel() {
-        vm.onTodosUpdated = { [weak self] in
-            self?.tableView.reloadData()
-        }
-    }
-}
+        vm.todos
+            .observe(on: MainScheduler.instance)
+            .bind(to: tableView.rx.items) { tableView, row, todo in
+                let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
+                    ?? UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
+                var content = cell.defaultContentConfiguration()
+                content.text = todo.title
+                content.secondaryText = todo.completed ? "Completed" : "Not Completed"
+                cell.contentConfiguration = content
+                
+                cell.backgroundColor = todo.completed ? .myGreen : .myRed
+                return cell
+            }
+            .disposed(by: disposeBag)
 
-extension TodosViewController: UITableViewDataSource {
-    func tableView(
-        _: UITableView,
-        numberOfRowsInSection _: Int
-    ) -> Int {
-        vm.todos.count
-    }
-
-    func tableView(
-        _: UITableView,
-        cellForRowAt indexPath: IndexPath
-    ) -> UITableViewCell {
-        let cell = UITableViewCell(
-            style: .subtitle,
-            reuseIdentifier: nil
-        )
-
-        let todo = vm.todos[indexPath.row]
-
-        cell.textLabel?.text = todo.title
-        cell.backgroundColor =
-            todo.completed
-                ? .myGreen
-                : .myRed
-
-        cell.detailTextLabel?.text =
-            todo.completed
-                ? "Completed"
-                : "Not Completed"
-
-        return cell
-    }
-}
-
-extension TodosViewController: UITableViewDelegate {
-    func tableView(
-        _: UITableView,
-        didSelectRowAt indexPath: IndexPath
-    ) {
-        let selectedTodo = vm.todos[indexPath.row]
-        let vc = TodoDetailsViewController(todo: selectedTodo)
-        navigationController?.pushViewController(vc, animated: true)
+        tableView.rx.modelSelected(Todo.self)
+            .subscribe(onNext: { [weak self] selectedTodo in
+                let vc = TodoDetailsViewController(todo: selectedTodo)
+                self?.navigationController?.pushViewController(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
 }
