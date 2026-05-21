@@ -1,5 +1,7 @@
 import Alamofire
 import Foundation
+import RxSwift
+import RxCocoa
 
 class APIService {
     static let shared = APIService()
@@ -8,26 +10,32 @@ class APIService {
 
     let baseURL = "https://jsonplaceholder.typicode.com"
 
-    func fetchTodos(
-        completion: @escaping ([Todo]) -> Void
-    ) {
-        AF.request("\(baseURL)/todos")
-            .validate()
-            .response { response in
-                guard let data = response.data else {
-                    completion([])
-                    return
-                }
+    func fetchTodos() -> Observable<[Todo]> {
+        Observable.create { observer in
+            let request = AF.request("\(self.baseURL)/todos")
+                .validate()
+                .response { response in
+                    guard let data = response.data else {
+                        observer.onNext([])
+                        observer.onCompleted()
+                        return
+                    }
 
-                do {
-                    let todos = try JSONDecoder().decode([Todo].self, from: data)
-                    completion(todos)
-
-                } catch {
-                    print(error)
-                    completion([])
+                    do {
+                        let todos = try JSONDecoder().decode([Todo].self, from: data)
+                        observer.onNext(todos)
+                        observer.onCompleted()
+                    } catch {
+                        print(error)
+                        observer.onNext([])
+                        observer.onCompleted()
+                    }
                 }
+            
+            return Disposables.create {
+                request.cancel()
             }
+        }
     }
 
     func fetchUsers(
