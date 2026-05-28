@@ -30,7 +30,7 @@ class PostsViewController: BaseViewController {
         vm.posts.observe(on: MainScheduler.instance)
             .bind(to: tableView.rx.items) { tableView, row, post in
                 let cell = tableView.dequeueReusableCell(withIdentifier: "cell")
-                ?? UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
+                    ?? UITableViewCell(style: .subtitle, reuseIdentifier: "cell")
 
                 var content = cell.defaultContentConfiguration()
                 content.text = post.title
